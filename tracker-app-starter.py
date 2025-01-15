@@ -19,7 +19,7 @@ class Fruit:
 
 # Function to fetch data and return it
 def fetch_fruit_data(fruit_name):
-    url = f"http://www.fruityvice.com/api/fruit/{fruit_name}"
+    url = f"https://pokeapi.co/api/v2/pokemon/ditto"
     response = requests.get(url)
 
     if response.status_code == 200:
