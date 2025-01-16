@@ -2,65 +2,73 @@ import requests
 import json
 import random
 
-# Define the Fruit class
-class Fruit:
-    def __init__(self, name, family, genus, calories, sugar):
-        self.name = name
-        self.family = family
-        self.genus = genus
-        self.calories = calories
-        self.sugar = sugar
+# Define the Emoji class
+class Emoji:
+    def __init__(self, *args):
+        print(args)
+        self.name = args[0]
+        self.group = args[1]
+        self.category = args[2]
+        self.html = args[3][0]
+        self.unicode = args[4][0]
 
     def display_info(self):
-        print(f"Name: {self.name}")
-        print(f"Family: {self.family}")
-        print(f"Calories: {self.calories}")
-        print(f"Sugar: {self.sugar}")
+        print(self.name)
+        print(self.group)
+        print(self.category)
+        print(self.html)
+        print(self.unicode)
+
+    def __str__(self):
+        return chr(int(self.unicode.removeprefix("U+"), 16))
 
 # Function to fetch data and return it
-def fetch_fruit_data(fruit_name):
-    url = f"https://pokeapi.co/api/v2/pokemon/ditto"
+def fetch_emoji_data():
+    url = f"https://emojihub.yurace.pro/api/all"
     response = requests.get(url)
 
     if response.status_code == 200:
-        fruit_data = response.json()
-        return fruit_data
+        emoji_data = response.json()
+        return emoji_data
     else:
-        print(f"Error fetching data for {fruit_name}.")
+        print(f"Error fetching data for emojis.")
         return None
     
-# Create a Fruit object using the data
-def create_fruit(fruit_json):
-    ... # :o
+# Create a Emoji object using the data
+def create_emoji(emoji_json):
+    emoji = Emoji(*emoji_json.values())
+
+    return emoji
+
 
 print()
-print("Welcome to the Fruit Tracker!")
-print("Track the nutritional values you've consumed in fruits today!")
+print("Welcome to the Emoji Tracker!")
+print("Emojis, yipee!")
 print()
 # store all the fruit objects
-fruits = []
+emojis = []
 calories = 0
 sugar = 0
 
+emoji_data = fetch_emoji_data()
+
 # Main program logic
 while True:
-    user_input = input("Enter a fruit: ").lower().strip()
+    user_input = input("What emoji would you like the information of? Please type in its name below: \n").lower().strip()
     print()
-    print(random.choice(["Yummmm", "Tasty :P", "I'll take a bite of that!", "Great choice!"]))
     print("Loading...")
 
-    # fetch fruit data using the API
-    fruit_data = fetch_fruit_data(user_input)
+    emoji = list(filter(lambda list_item: list_item if user_input == list_item["name"] else None, emoji_data))[0]
 
     # error handling: if fruit isn't found, continue in loop
-    if not fruit_data:
+    if not emoji:
         continue
     
     # create an fruit object
-    fruit_obj = create_fruit(fruit_data)
-    fruit_obj.display_info()
+    emoji_obj = create_emoji(emoji)
+    emoji_obj.display_info()
     # append the fruit to our list
-    fruits.append(fruit_obj)
+    emojis.append(emoji_obj)
 
     print()
     keep_going = input("Track another fruit (y/n): ").lower().strip()
@@ -70,7 +78,7 @@ while True:
 # display summary to user
 print()
 print("Here's your fruity breakdown for today:")
-for fruit in fruits:
+for fruit in emoji:
     calories += fruit.calories
     sugar += fruit.sugar
 print(f"Calories: {calories}")
