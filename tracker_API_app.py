@@ -43,21 +43,18 @@ def create_emoji(emoji_json) -> Emoji:
 
     return emoji
 
-
-print()
-print("Welcome to the Emoji Tracker!")
-print("This app lets you see and track emojis!")
-print()
-# store all the emoji objects
 emojis: list[str] = []
 
 emoji_data: dict[str: str | list[str]] | None = fetch_emoji_data()
 
+print("\nWelcome to the Emoji Tracker!")
+print("This app lets you see and track emojis! \n")
+# store all the emoji objects
+
 # Main program logic
 while True:
     user_input: str = input("What emoji would you like the information of? Please type in its name below, or all if you would like to see your options: \n").lower().strip()
-    print()
-    print("Loading...")
+    print("\nLoading...")
 
     # filter through every emoji's information and find the emoji that's name matches the user's input 
     emoji: list | dict[str: str | list[str]] = list(filter(lambda list_item: 
@@ -95,6 +92,5 @@ while True:
         break
 
 # display summary to user
-print()
-print("Here's the emojis you looked at today!:")
+print("\nHere's the emojis you looked at today!:")
 for emoji in emojis: print(f"{emoji.name}: {emoji}")
