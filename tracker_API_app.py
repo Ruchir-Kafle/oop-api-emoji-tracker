@@ -46,6 +46,7 @@ def create_emoji(emoji_json) -> Emoji:
 
 print()
 print("Welcome to the Emoji Tracker!")
+print("This app lets you see and track emojis!")
 print()
 # store all the emoji objects
 emojis: list[str] = []
@@ -54,16 +55,25 @@ emoji_data: dict[str: str | list[str]] | None = fetch_emoji_data()
 
 # Main program logic
 while True:
-    user_input: str = input("What emoji would you like the information of? Please type in its name below: \n").lower().strip()
+    user_input: str = input("What emoji would you like the information of? Please type in its name below, or all if you would like to see your options: \n").lower().strip()
     print()
     print("Loading...")
 
     # filter through every emoji's information and find the emoji that's name matches the user's input 
-    emoji: list | dict[str: str | list[str]] = list(filter(lambda list_item: list_item if user_input == list_item["name"] else None, emoji_data))
+    emoji: list | dict[str: str | list[str]] = list(filter(lambda list_item: 
+                                                           True if user_input == list_item["name"] 
+                                                           else True if user_input == "all"
+                                                           else False, emoji_data))
 
     # error handling: if emoji isn't found, continue in loop
     if not emoji:
         print("That doesn't seem to be a valid emoji, please try again. \n")
+        continue
+    elif len(emoji) > 1:
+        for each_emoji in emoji:
+            print(each_emoji["name"])
+        
+        print()
         continue
     
     # converting the emoji value, which is a list, to a dictionary
