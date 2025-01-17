@@ -57,37 +57,36 @@ while True:
     print("\nLoading...")
 
     # filter through every emoji's information and find the emoji that's name matches the user's input 
-    emoji: list | dict[str: str | list[str]] = list(filter(lambda list_item: 
+    user_emoji: list | dict[str: str | list[str]] = list(filter(lambda list_item: 
                                                            True if user_input == list_item["name"] 
                                                            else True if user_input == "all"
                                                            else False, emoji_data))
 
     # error handling: if emoji isn't found, continue in loop
-    if not emoji:
+    if not user_emoji:
         print("That doesn't seem to be a valid emoji, please try again. \n")
         continue
-    elif len(emoji) > 1:
-        for each_emoji in emoji:
+    elif len(user_emoji) > 1:
+        for each_emoji in user_emoji:
             print(each_emoji["name"])
         
         print()
         continue
     
     # converting the emoji value, which is a list, to a dictionary
-    emoji = emoji[0]
+    user_emoji = user_emoji[0]
     
     # create an emoji object
-    emoji_obj: Emoji = create_emoji(emoji)
+    emoji_obj: Emoji = create_emoji(user_emoji)
     
+    # append the emoji to our list
+    emojis.append(emoji_obj)
+
     # display emoji information
     print(emoji_obj)
     emoji_obj.display_info()
 
-    # append the emoji to our list
-    emojis.append(emoji_obj)
-
-    print()
-    keep_going = input("Track another emoji (y/n): ").lower().strip()
+    keep_going = input("\nTrack another emoji (y/n): ").lower().strip()
     if keep_going == "n":
         break
 
