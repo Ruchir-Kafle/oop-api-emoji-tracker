@@ -20,6 +20,11 @@ In order to know emoji names, the user is able to access every emoji name by inp
 ## Installing
 
 - Fork this repo to create your own copy.
+- Copy the https link.
+- Clone the upstream repository onto the local machine:
+```
+git clone <repository https link>
+```
 - Install the requests module:
 
 ```
@@ -29,7 +34,9 @@ pip install requests
 ## Executing program
 
 In your IDE, make sure you are in the project folder in the terminal and type:
-python tracker-app-solution.py
+```
+python ./tracker_API_app.py
+```
 
 # Authors
 
