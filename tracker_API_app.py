@@ -1,4 +1,5 @@
 import requests
+import tkinter as tk
 
 # Define the Emoji class
 class Emoji:
@@ -21,7 +22,7 @@ class Emoji:
     def __str__(self) -> str:
         return chr(int(self.unicode.removeprefix("U+"), 16))
 
-# Function to fetch data and return it
+# Function to fetch emoji data and return it
 def fetch_emoji_data() -> dict[str: str | list[str]] | None:
     url: str = f"https://emojihub.yurace.pro/api/all"
     response: requests.Response = requests.get(url)
@@ -43,15 +44,21 @@ def create_emoji(emoji_json) -> Emoji:
 
     return emoji
 
+# list of emojis the user tracks
 emojis: list[str] = []
 
+# all emoji data
 emoji_data: dict[str: str | list[str]] | None = fetch_emoji_data()
 
+# boolean deciding whether the main loop will run or not
 run: bool = True
 
-print("\nWelcome to the Emoji Tracker!")
-print("This app lets you see and track emojis!")
-# store all the emoji objects
+window: tk.Tk = tk.Tk()
+window.geometry("350x350")
+window.title("Emoji Tracker App")
+
+welcome_label: tk.Label = tk.Label(window, text="Welcome to the Emoji Tracker!", anchor="w").grid(row=0, column=2, columnspan=3)
+description_label: tk.Label = tk.Label(window, text="This app lets you see and track emojis!", anchor="w").grid(row=1, column=2, columnspan=3)
 
 # Main program logic
 while run:
@@ -88,6 +95,7 @@ while run:
     print(emoji_obj)
     emoji_obj.display_info()
 
+    # while loop to keep asking the user if they would like to track another emoji if they keep entering invalid inputs
     while True:
         keep_going: str = input("\nTrack another emoji (y/n): \n").lower().strip()
 
