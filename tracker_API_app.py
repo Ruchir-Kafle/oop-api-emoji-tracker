@@ -11,11 +11,11 @@ class Emoji:
     
     # display info
     def display_info(self) -> None:
-        print(self.name)
-        print(self.group)
-        print(self.category)
-        print(self.html)
-        print(self.unicode)
+        print(f"Name: {self.name}")
+        print(f"Group: {self.group}")
+        print(f"Category: {self.category}")
+        print(f"HTML Code: {self.html}")
+        print(f"Unicode: {self.unicode}")
 
     # when printed, the instance of the class will return its unicode
     def __str__(self) -> str:
@@ -47,12 +47,14 @@ emojis: list[str] = []
 
 emoji_data: dict[str: str | list[str]] | None = fetch_emoji_data()
 
+run: bool = True
+
 print("\nWelcome to the Emoji Tracker!")
-print("This app lets you see and track emojis! \n")
+print("This app lets you see and track emojis!")
 # store all the emoji objects
 
 # Main program logic
-while True:
+while run:
     user_input: str = input("What emoji would you like the information of? Please type in its name below, or all if you would like to see your options: \n").lower().strip()
     print("\nLoading...")
 
@@ -86,9 +88,16 @@ while True:
     print(emoji_obj)
     emoji_obj.display_info()
 
-    keep_going = input("\nTrack another emoji (y/n): ").lower().strip()
-    if keep_going == "n":
-        break
+    while True:
+        keep_going: str = input("\nTrack another emoji (y/n): \n").lower().strip()
+
+        if keep_going == "y":
+            break
+        elif keep_going == "n":
+            run = False
+            break
+        else:
+            print("\nThat doesn't seem to be a valid option, please try again.")
 
 # display summary to user
 print("\nHere's the emojis you looked at today!:")
