@@ -15,7 +15,7 @@ class Emoji:
     # display info
     def display_info(self) -> None:
         character_label.configure(text=f"Character: {self.character}")
-        name_label.configure(text=f"Name: {self.name}")
+        name_label.configure(text=f"{self.name}")
         group_label.configure(text=f"Group: {self.group}")
         category_label.configure(text=f"Category: {self.category}")
         html_label.configure(text=f"HTML Code: {self.html}")
@@ -41,7 +41,7 @@ def fetch_emoji_data() -> dict[str: str | list[str]] | None:
         return None
     
 # Create a Emoji object using the data
-def create_emoji() -> Emoji:
+def create_emoji(*args) -> Emoji:
 
     user_input: str = user_entry.get().lower()
 
@@ -57,24 +57,25 @@ def create_emoji() -> Emoji:
     # error handling: if emoji isn't found, continue in loop
     if not emoji_json:
 
-        print("That doesn't seem to be a valid emoji, please try again. \n")
+        unicode_label.configure(text=f"That doesn't seem to be a valid emoji, please try again.")
     
     else:
     
         # converting the emoji value, which is a list, to a dictionary
         emoji_json = emoji_json[0]
 
-    emoji: Emoji = Emoji(name=emoji_json["name"], 
-                         group=emoji_json["group"], 
-                         category=emoji_json["category"], 
-                         html=emoji_json["htmlCode"][0], 
-                         unicode=emoji_json["unicode"][0])
+        # creating the emoji object
+        emoji: Emoji = Emoji(name=emoji_json["name"], 
+                            group=emoji_json["group"], 
+                            category=emoji_json["category"], 
+                            html=emoji_json["htmlCode"][0], 
+                            unicode=emoji_json["unicode"][0])
 
-    # append the emoji to our list
-    emojis.append(f"{emoji.name} {emoji.character}")
+        # append the emoji to our list
+        emojis.append(f"{emoji.name} {emoji.character}")
 
-    # display emoji information
-    emoji.display_info()
+        # display emoji information
+        emoji.display_info()
 
 # list of emojis the user tracks
 emojis: list[str] = []
@@ -86,7 +87,7 @@ emoji_data: dict[str: str | list[str]] | None = fetch_emoji_data()
 run: bool = True
 
 window: tk.Tk = tk.Tk()
-window.geometry("350x350")
+window.geometry("500x600")
 window.title("Emoji Tracker App")
 
 # grid is created implictily based on largest length of constituent elements
@@ -105,12 +106,15 @@ user_entry.grid(row=2, column=1, columnspan=1, sticky="W", pady=10)
 
 find_button: tk.Button = tk.Button(window, text="Find", command=create_emoji)
 find_button.grid(row=3, column=1, columnspan=1, sticky="WE", pady=10)
+find_button.bind("<Return>", create_emoji)
 
 character_label: tk.Label = tk.Label(window, text=f"Character: ")
 character_label.grid(row=4, column=0, columnspan=1, sticky="W")
 
-name_label: tk.Label = tk.Label(window, text=f"Name: ")
-name_label.grid(row=5, column=0, columnspan=1, sticky="W")
+precursor_name_label: tk.Label = tk.Label(window, text=f"Name: ")
+precursor_name_label.grid(row=5, column=0, columnspan=1, sticky="W")
+name_label: tk.Label = tk.Label(window, text=f"", wraplength=150)
+name_label.grid(row=5, column=1, columnspan=1, sticky="W")
 
 group_label: tk.Label = tk.Label(window, text=f"Group: ")
 group_label.grid(row=6, column=0, columnspan=1, sticky="W")
@@ -124,9 +128,12 @@ html_label.grid(row=8, column=0, columnspan=1, sticky="W")
 unicode_label: tk.Label = tk.Label(window, text=f"Unicode: ")
 unicode_label.grid(row=9, column=0, columnspan=1, sticky="W")
 
-precursor: tk.Label = tk.Label(window, text=f"Tracked Emojis: ")
-precursor.grid(row=10, column=0, columnspan=1, sticky="NSW", pady=10)
-emojis_label: tk.Label = tk.Label(window, text=f"{[emoji + "\n" for emoji in emojis]}")
-emojis_label.grid(row=10, column=1, columnspan=1, sticky="W", pady=10)
+error_message: tk.Label = tk.Label(window, text=f"", wraplength=150)
+error_message.grid(row=10, column=1, columnspan=1, sticky="WE", pady=10)
+
+precursor_emojis_label: tk.Label = tk.Label(window, text=f"Tracked Emojis: ")
+precursor_emojis_label.grid(row=11, column=0, columnspan=1, sticky="NSW")
+emojis_label: tk.Label = tk.Label(window, text=f"{[emoji + "\n" for emoji in emojis]}", wraplength=150)
+emojis_label.grid(row=11, column=1, columnspan=1, sticky="W")
 
 window.mainloop()
