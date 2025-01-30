@@ -52,7 +52,6 @@ def create_emoji(*args) -> Emoji:
     # filter through every emoji's information and find the emoji that's name matches the user's input 
     emoji_json: list | dict[str: str | list[str]] = list(filter(lambda list_item: 
                                                            True if user_input == list_item["name"] 
-                                                           else True if user_input == "all"
                                                            else False, 
                                                            emoji_data))
 

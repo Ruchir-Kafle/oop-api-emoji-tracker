@@ -1,6 +1,6 @@
 # Emoji API Tracker App
 
-This is a simple app using an emoji API to get and give a user access to every single emoji and its information.
+This is a simple app using an emoji API and tkinter to get and give a user access to every single emoji and its information.
 
 # Description
 
