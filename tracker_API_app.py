@@ -1,5 +1,6 @@
 import requests
 import tkinter as tk
+from tkinter import ttk
 
 # Define the Emoji class
 class Emoji:
@@ -20,6 +21,7 @@ class Emoji:
         category_label.configure(text=f"Category: {self.category}")
         html_label.configure(text=f"HTML Code: {self.html}")
         unicode_label.configure(text=f"Unicode: {self.unicode}")
+        error_message.configure(text=f"")
 
         emoji_string: str = ""
 
@@ -57,7 +59,7 @@ def create_emoji(*args) -> Emoji:
     # error handling: if emoji isn't found, continue in loop
     if not emoji_json:
 
-        unicode_label.configure(text=f"That doesn't seem to be a valid emoji, please try again.")
+        error_message.configure(text=f"That doesn't seem to be a valid emoji, please try again.")
     
     else:
     
@@ -86,54 +88,81 @@ emoji_data: dict[str: str | list[str]] | None = fetch_emoji_data()
 # boolean deciding whether the main loop will run or not
 run: bool = True
 
+# create window
 window: tk.Tk = tk.Tk()
 window.geometry("500x600")
 window.title("Emoji Tracker App")
 
+# styling
+style: ttk.Style = ttk.Style()
+style.theme_use("winnative")
+style.configure("TLabel", font=("Gabriola", 13))
+style.configure("TButton", font=("Impact", 16))
+style.configure("TEntry", font=("Impact", 16), padding=5)
+
+# welcome label
 # grid is created implictily based on largest length of constituent elements
 # sticky allows elements to always be aligned to a part of the cell
-welcome_label: tk.Label = tk.Label(window, text="Welcome to the Emoji Tracker!")
-welcome_label.grid(row=0, column=0, columnspan=2, sticky="WE")
+welcome_label: ttk.Label = ttk.Label(window, text="Welcome to the Emoji Tracker!", style="TLabel")
+welcome_label.grid(row=0, column=0, columnspan=2)
 
-description_label: tk.Label = tk.Label(window, text="This app lets you see and track emojis!")
-description_label.grid(row=1, column=0, columnspan=2, sticky="WE")
+# description label
+description_label: ttk.Label = ttk.Label(window, text="This app lets you see and track emojis!", style="TLabel")
+description_label.grid(row=1, column=0, columnspan=2)
 
-prompt_label: tk.Label = tk.Label(window, text="Enter an emoji's name:")
+# prompt label
+prompt_label: ttk.Label = ttk.Label(window, text="Enter an emoji's name:", style="TLabel")
 prompt_label.grid(row=2, column=0, columnspan=1, sticky="W", pady=10)
 
-user_entry: tk.Entry = tk.Entry(window)
-user_entry.grid(row=2, column=1, columnspan=1, sticky="W", pady=10)
+# entry box
+user_entry: ttk.Entry = ttk.Entry(window, style="TEntry")
+user_entry.grid(row=2, column=1, columnspan=1, sticky="WE")
 
-find_button: tk.Button = tk.Button(window, text="Find", command=create_emoji)
-find_button.grid(row=3, column=1, columnspan=1, sticky="WE", pady=10)
+# submit button
+find_button: ttk.Button = ttk.Button(window, text="Find", command=create_emoji, style="TButton")
+find_button.grid(row=3, column=1, columnspan=1, sticky="WE")
+# when focused and enter is pressed, create emoji is called
 find_button.bind("<Return>", create_emoji)
 
-character_label: tk.Label = tk.Label(window, text=f"Character: ")
+# character label
+character_label: ttk.Label = ttk.Label(window, text=f"Character: ", style="TLabel")
 character_label.grid(row=4, column=0, columnspan=1, sticky="W")
 
-precursor_name_label: tk.Label = tk.Label(window, text=f"Name: ")
+# name label
+# before name
+precursor_name_label: ttk.Label = ttk.Label(window, text=f"Name: ", style="TLabel")
 precursor_name_label.grid(row=5, column=0, columnspan=1, sticky="W")
-name_label: tk.Label = tk.Label(window, text=f"", wraplength=150)
+# actual name label
+name_label: ttk.Label = ttk.Label(window, text=f"", wraplength=150, style="TLabel")
 name_label.grid(row=5, column=1, columnspan=1, sticky="W")
 
-group_label: tk.Label = tk.Label(window, text=f"Group: ")
+# group label
+group_label: ttk.Label = ttk.Label(window, text=f"Group: ", style="TLabel")
 group_label.grid(row=6, column=0, columnspan=1, sticky="W")
 
-category_label: tk.Label = tk.Label(window, text=f"Category: ")
+# category label
+category_label: ttk.Label = ttk.Label(window, text=f"Category: ", style="TLabel")
 category_label.grid(row=7, column=0, columnspan=1, sticky="W")
 
-html_label: tk.Label = tk.Label(window, text=f"HTML Code: ")
+# html label
+html_label: ttk.Label = ttk.Label(window, text=f"HTML Code: ", style="TLabel")
 html_label.grid(row=8, column=0, columnspan=1, sticky="W")
 
-unicode_label: tk.Label = tk.Label(window, text=f"Unicode: ")
+# unicode label
+unicode_label: ttk.Label = ttk.Label(window, text=f"Unicode: ", style="TLabel")
 unicode_label.grid(row=9, column=0, columnspan=1, sticky="W")
 
-error_message: tk.Label = tk.Label(window, text=f"", wraplength=150)
-error_message.grid(row=10, column=1, columnspan=1, sticky="WE", pady=10)
+# tracked emojis label
+# before emojis
+precursor_emojis_label: ttk.Label = ttk.Label(window, text=f"Tracked Emojis: ", style="TLabel")
+precursor_emojis_label.grid(row=10, column=0, columnspan=1, sticky="NSW")
+# actual emojis label
+emojis_label: ttk.Label = ttk.Label(window, text=f"{[emoji + "\n" for emoji in emojis]}", wraplength=150, style="TLabel")
+emojis_label.grid(row=10, column=1, columnspan=1, sticky="W")
 
-precursor_emojis_label: tk.Label = tk.Label(window, text=f"Tracked Emojis: ")
-precursor_emojis_label.grid(row=11, column=0, columnspan=1, sticky="NSW")
-emojis_label: tk.Label = tk.Label(window, text=f"{[emoji + "\n" for emoji in emojis]}", wraplength=150)
-emojis_label.grid(row=11, column=1, columnspan=1, sticky="W")
+# error message label
+error_message: ttk.Label = ttk.Label(window, text=f"", wraplength=150, style="TLabel")
+error_message.grid(row=11, column=1, columnspan=1, pady=10)
 
+# triggering the main loop
 window.mainloop()
